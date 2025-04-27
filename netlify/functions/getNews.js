@@ -2,7 +2,7 @@ const axios = require('axios');
 
 exports.handler = async function(event, context) {
   const API_KEY = process.env.NEWS_API_KEY; // Safe: loaded from Netlify env vars
-  
+  console.log(API_KEY,'API_KEY')
   try {
     const response = await axios.get('https://newsapi.org/v2/top-headlines', {
       params: {
