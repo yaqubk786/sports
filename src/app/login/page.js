@@ -75,7 +75,7 @@ export default function SignInPage() {
               Or Login With
             </p>
             <div className="flex justify-center gap-4">
-              <button className="p-3 rounded-full border border-gray-300 hover:bg-gray-100 bg-blue-800 cursor-pointer">
+              <button className="p-3 rounded-full border border-gray-300  bg-blue-800 cursor-pointer">
                 <Image
                   src="/Images/youtube.svg"
                   alt="youtube"
@@ -84,7 +84,7 @@ export default function SignInPage() {
                   height={50}
                 />
               </button>
-              <button className="p-3 rounded-full border border-gray-300 hover:bg-gray-100 bg-blue-800 cursor-pointer">
+              <button className="p-3 rounded-full border border-gray-300  bg-blue-800 cursor-pointer">
                 <Image
                   src="/Images/x.svg"
                   alt="twitter"
@@ -93,7 +93,7 @@ export default function SignInPage() {
                   height={50}
                 />
               </button>
-              <button className="p-3 rounded-full border border-gray-300 hover:bg-gray-100 bg-blue-800 cursor-pointer">
+              <button className="p-3 rounded-full border border-gray-300  bg-blue-800 cursor-pointer">
                 <Image
                   src="/Images/fb.svg"
                   alt="Facebook"
@@ -102,7 +102,7 @@ export default function SignInPage() {
                   height={50}
                 />
               </button>
-              <button className="p-3 rounded-full border border-gray-300 hover:bg-gray-100 cursor-pointer">
+              <button className="p-3 rounded-full border border-gray-300  cursor-pointer">
                 <Image
                   src="/Images/google.png"
                   alt="Google"
