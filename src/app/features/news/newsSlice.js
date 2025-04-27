@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 // Replace with your actual News API key
-// const API_KEY = "c3f3452d1ce9491690650ab6444cd713";
+
 
 export const fetchNews = createAsyncThunk("news/fetchNews", async () => {
   // const response = await axios.get(
