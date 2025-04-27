@@ -13,7 +13,7 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function Dashboard() {
   const { data: session, status: sessionStatus } = useSession();
-  const router = useRouter(); // ✅ initialize router for redirection
+  const router = useRouter(); 
   const dispatch = useDispatch();
   const { articles, status, error } = useSelector((state) => state.news);
 
@@ -58,16 +58,16 @@ export default function Dashboard() {
     setEditablePayouts(storedOverrides);
   }, [articles]);
 
-  // ✅ Protect the route properly
+  // Protect the route properly
   useEffect(() => {
-    if (sessionStatus === "loading") return; // still loading session
+    if (sessionStatus === "loading") return; 
     if (!session) {
-      router.push("/login"); // ✅ correct client side redirect
+      router.push("/login"); 
     }
   }, [session, sessionStatus, router]);
 
   if (sessionStatus === "loading") {
-    return <p>Loading...</p>; // loading spinner/text
+    return <p>Loading...</p>; 
   }
 
   const filteredArticles = articles.filter((article) => {

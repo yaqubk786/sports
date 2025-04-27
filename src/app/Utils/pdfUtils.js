@@ -1,5 +1,5 @@
 import { jsPDF } from "jspdf";
-import autoTable from "jspdf-autotable"; // ✅ this is required
+import autoTable from "jspdf-autotable"; 
 
 export const handleExportPDF = (authorStats, payoutRate, editablePayouts) => {
   const doc = new jsPDF();

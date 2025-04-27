@@ -10,7 +10,6 @@ export const authOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        // Replace this logic with real DB check
         const user = { id: "1", email: "test@example.com", password: "123456" };
 
         if (
@@ -20,7 +19,7 @@ export const authOptions = {
           return { id: user.id, email: user.email };
         }
 
-        return null; // Authentication failed
+        return null; 
       },
     }),
   ],

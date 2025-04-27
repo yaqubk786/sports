@@ -22,7 +22,6 @@ export default function SignInPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-300 via-blue-500 to-green-00">
       <div className="bg-white rounded-3xl shadow-lg flex overflow-hidden max-w-5xl w-full">
-        {/* Left Side - Form */}
         <div className="w-full md:w-1/2 p-10 flex flex-col justify-center">
           <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">
             Login
