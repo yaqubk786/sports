@@ -5,15 +5,14 @@ import { fetchNews } from "../features/news/newsSlice";
 import ExportButtons from "../Components/ExportBtn";
 import AuthorStatsChart from "../Components/Charts/AuthorStatsChart";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { signOut } from "next-auth/react";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function Dashboard() {
   const { data: session, status: sessionStatus } = useSession();
-  const router = useRouter(); 
+  const router = useRouter();
   const dispatch = useDispatch();
   const { articles, status, error } = useSelector((state) => state.news);
 
@@ -34,9 +33,7 @@ export default function Dashboard() {
     const storedRate = localStorage.getItem("payoutRate");
     if (storedRate) {
       const value = parseFloat(storedRate);
-      if (!isNaN(value)) {
-        setPayoutRate(value);
-      }
+      if (!isNaN(value)) setPayoutRate(value);
     }
   }, []);
 
@@ -47,7 +44,6 @@ export default function Dashboard() {
   const uniqueAuthors = [
     ...new Set(articles.map((a) => a.author).filter(Boolean)),
   ];
-  
 
   useEffect(() => {
     const storedOverrides = {};
@@ -58,16 +54,17 @@ export default function Dashboard() {
     setEditablePayouts(storedOverrides);
   }, [articles]);
 
-  // Protect the route properly
   useEffect(() => {
-    if (sessionStatus === "loading") return; 
-    if (!session) {
-      router.push("/login"); 
-    }
+    if (sessionStatus === "loading") return;
+    if (!session) router.push("/login");
   }, [session, sessionStatus, router]);
 
   if (sessionStatus === "loading") {
-    return <p>Loading...</p>; 
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white"></div>
+      </div>
+    );
   }
 
   const filteredArticles = articles.filter((article) => {
@@ -82,7 +79,6 @@ export default function Dashboard() {
       : true;
     const matchesEndDate = endDate ? publishedDate <= new Date(endDate) : true;
     const matchesType = typeFilter ? typeFilter === "news" : true;
-
     return (
       matchesAuthor &&
       matchesSearch &&
@@ -95,9 +91,7 @@ export default function Dashboard() {
   const authorStats = {};
   filteredArticles.forEach((article) => {
     const author = article.author || "Unknown";
-    if (!authorStats[author]) {
-      authorStats[author] = 0;
-    }
+    if (!authorStats[author]) authorStats[author] = 0;
     authorStats[author] += 1;
   });
 
@@ -150,39 +144,41 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-blue-400 via-blue-500 to-green-300 py-12 px-8">
-      <div className="max-w-7xl mx-auto space-y-12">
-        <div className="flex justify-end ">
+    <div className="min-h-screen bg-gradient-to-r from-blue-400 via-blue-500 to-green-300 py-6 px-4 md:py-12 md:px-8">
+      <div className="max-w-7xl mx-auto space-y-8 md:space-y-12">
+        {/* Logout */}
+        <div className="flex justify-end">
           <button
             onClick={() => signOut({ callbackUrl: "/login" })}
-            className="bg-white text-indigo-600 cursor-pointer font-semibold px-6 py-3 rounded-2xl shadow-md hover:bg-gray-100 transition-all"
+            className="bg-white text-indigo-600 font-semibold text-sm md:text-base px-4 md:px-6 py-2 md:py-3 rounded-2xl shadow-md hover:bg-gray-100 transition-all"
           >
             Logout
           </button>
         </div>
+
         {/* Title */}
         <div className="text-white">
-          <h1 className="text-5xl font-extrabold leading-tight mb-2">
+          <h1 className="text-3xl md:text-5xl font-extrabold leading-tight mb-2">
             Dashboard
           </h1>
-          <p className="opacity-80 text-lg">
+          <p className="opacity-80 text-sm md:text-lg">
             Analyze the current statistics and performance.
           </p>
         </div>
 
         {/* Filters */}
-        <div className="bg-white p-6 rounded-3xl shadow-lg grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <div className="bg-white p-4 md:p-6 rounded-3xl shadow-lg grid gap-4 md:gap-6 md:grid-cols-2 lg:grid-cols-4 text-sm md:text-base">
           <input
             type="text"
             placeholder="Search by keyword..."
-            className="input-style rounded-xl p-3 text-lg focus:ring-2 focus:ring-indigo-400"
+            className="rounded-xl p-3 focus:ring-2 focus:ring-indigo-400"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           <select
-            className="input-style rounded-xl p-3 text-lg focus:ring-2 focus:ring-indigo-400"
             value={authorFilter}
             onChange={(e) => setAuthorFilter(e.target.value)}
+            className="rounded-xl p-3 focus:ring-2 focus:ring-indigo-400"
           >
             <option value="">Filter by Author</option>
             {uniqueAuthors.map((author, i) => (
@@ -195,18 +191,18 @@ export default function Dashboard() {
             type="date"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
-            className="input-style rounded-xl p-3 text-lg focus:ring-2 focus:ring-indigo-400"
+            className="rounded-xl p-3 focus:ring-2 focus:ring-indigo-400"
           />
           <input
             type="date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
-            className="input-style rounded-xl p-3 text-lg focus:ring-2 focus:ring-indigo-400"
+            className="rounded-xl p-3 focus:ring-2 focus:ring-indigo-400"
           />
           <select
-            className="input-style rounded-xl p-3 text-lg focus:ring-2 focus:ring-indigo-400 md:col-span-2 lg:col-span-1"
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
+            className="rounded-xl p-3 focus:ring-2 focus:ring-indigo-400 md:col-span-2 lg:col-span-1"
           >
             <option value="">Filter by Type</option>
             <option value="news">News</option>
@@ -214,69 +210,67 @@ export default function Dashboard() {
         </div>
 
         {/* News Cards */}
-        <div>
-          {status === "loading" && (
-            <p className="text-white text-xl">Loading news...</p>
-          )}
-          {status === "failed" && (
-            <p className="text-red-300 text-xl">{`Error: ${error}`}</p>
-          )}
-          {filteredArticles.length === 0 ? (
-            <p className="text-white text-xl">No matching articles found.</p>
-          ) : (
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {filteredArticles.map((article, index) => (
+        <div className="overflow-x-auto">
+          <div className="flex gap-4 md:grid md:grid-cols-2 lg:grid-cols-3">
+            {status === "loading" ? (
+              <p className="text-white text-center text-lg">Loading news...</p>
+            ) : status === "failed" ? (
+              <p className="text-red-300 text-center text-lg">{`Error: ${error}`}</p>
+            ) : filteredArticles.length === 0 ? (
+              <p className="text-white text-center text-lg">
+                No matching articles found.
+              </p>
+            ) : (
+              filteredArticles.map((article, index) => (
                 <div
                   key={index}
-                  className="p-6 bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all transform hover:scale-105"
+                  className="flex-shrink-0 w-72 md:w-auto bg-white p-4 md:p-6 rounded-xl shadow-lg hover:shadow-2xl transition-all transform hover:scale-105"
                 >
-                  <h2 className="text-xl font-semibold text-indigo-600">
+                  <h2 className="text-indigo-600 font-semibold text-base md:text-xl">
                     {article.title}
                   </h2>
-                  <p className="text-sm text-gray-500 mt-1">
+                  <p className="text-xs md:text-sm text-gray-500 mt-1">
                     {article.author || "Unknown"} •{" "}
                     {new Date(article.publishedAt).toLocaleDateString()}
                   </p>
-                  <p className="mt-3 text-gray-600">{article.description}</p>
+                  <p className="mt-3 text-gray-600 text-sm">
+                    {article.description}
+                  </p>
                 </div>
-              ))}
-            </div>
-          )}
+              ))
+            )}
+          </div>
         </div>
 
-        {/* Payout Calculator */}
-        <div className="bg-white p-6 rounded-3xl shadow-lg space-y-6">
-          <div className="flex justify-between items-center">
-            <h2 className="text-3xl font-bold text-gray-800">
+        <div className="bg-white p-4 md:p-6 rounded-3xl shadow-lg space-y-6">
+          <div className="flex flex-col md:flex-row justify-between items-center mb-4 md:mb-8">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4 md:mb-0">
               💰 Payout Calculator
             </h2>
             <ExportButtons
               authorStats={authorStats}
               payoutRate={payoutRate}
               editablePayouts={editablePayouts}
+              className="w-full md:w-auto"
             />
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-2 gap-4 md:gap-6">
             <div>
-              <label className="block text-lg text-gray-500 mb-2">
+              <label className="block text-gray-500 text-sm md:text-lg mb-2">
                 Default payout per article ($):
               </label>
               <input
                 type="number"
                 value={payoutRate}
-                onChange={(e) => {
-                  const value = parseFloat(e.target.value);
-                  setPayoutRate(isNaN(value) ? 0 : value);
-                }}
-                className="input-style rounded-xl p-3 text-lg focus:ring-2 focus:ring-indigo-400"
+                onChange={(e) => setPayoutRate(parseFloat(e.target.value) || 0)}
+                className="rounded-xl p-3 text-sm md:text-lg focus:ring-2 focus:ring-indigo-400"
               />
             </div>
           </div>
 
-          {/* Table */}
-          <div className="overflow-x-auto">
-            <table className="w-full table-auto text-lg text-gray-700">
+          <div className="overflow-x-auto max-h-96 md:max-h-full">
+            <table className="w-full table-auto text-sm md:text-lg text-gray-700 min-w-[600px]">
               <thead className="bg-indigo-600 text-white">
                 <tr>
                   <th className="p-4 text-left">Author</th>
@@ -288,41 +282,40 @@ export default function Dashboard() {
                 {Object.entries(authorStats).map(([author, count]) => {
                   const rate = editablePayouts[author] ?? payoutRate;
                   const total = (count * rate).toFixed(2);
-
                   return (
                     <tr key={author} className="border-b border-gray-200">
                       <td className="p-4">{author}</td>
                       <td className="p-4">{count}</td>
                       <td className="p-4">
                         {activeEdits[author] !== undefined ? (
-                          <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-2">
                             <input
                               type="number"
                               value={activeEdits[author]}
                               onChange={(e) =>
                                 handleEditPayout(author, e.target.value)
                               }
-                              className="input-style rounded-xl w-32"
+                              className="rounded-xl p-2 w-24"
                             />
                             <button
                               onClick={() => handleSavePayout(author)}
-                              className="text-indigo-600 hover:underline"
+                              className="text-indigo-600 hover:underline text-xs"
                             >
                               Save
                             </button>
                             <button
                               onClick={() => handleResetPayout(author)}
-                              className="text-red-500 hover:underline"
+                              className="text-red-500 hover:underline text-xs"
                             >
                               Reset
                             </button>
                           </div>
                         ) : (
-                          <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-2">
                             {total}
                             <button
                               onClick={() => handleEditPayout(author, rate)}
-                              className="text-indigo-600 hover:underline"
+                              className="text-indigo-600 hover:underline text-xs"
                             >
                               Edit
                             </button>
@@ -338,8 +331,11 @@ export default function Dashboard() {
         </div>
 
         {/* Chart */}
-        <div className="bg-white p-6 rounded-3xl shadow-lg">
-          <AuthorStatsChart chartData={chartData} />
+        <div className="bg-white p-4 md:p-6 rounded-3xl shadow-lg">
+          <AuthorStatsChart
+            chartData={chartData}
+            loading={status === "loading"}
+          />
         </div>
       </div>
     </div>
