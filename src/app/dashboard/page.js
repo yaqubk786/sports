@@ -190,14 +190,17 @@ export default function Dashboard() {
           <input
             type="date"
             value={startDate}
+             placeholder="Start Date"
             onChange={(e) => setStartDate(e.target.value)}
-            className="rounded-xl p-3 focus:ring-2 focus:ring-indigo-400"
+            className="rounded-xl p-3 focus:ring-2 focus:ring-indigo-400 w-full sm:w-full md:w-auto"
           />
           <input
             type="date"
+             placeholder="End Date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
-            className="rounded-xl p-3 focus:ring-2 focus:ring-indigo-400"
+            className="rounded-xl p-3 focus:ring-2 focus:ring-indigo-400 w-full sm:w-full md:w-auto"
+            
           />
           <select
             value={typeFilter}
